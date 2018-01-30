@@ -10,7 +10,8 @@ import ComponentAContainer from '../components/ComponentsA/ComponentAContainer'
 import ComponentBContainer from '../components/ComponentsB/ComponentBContainer'
 import LoginContainer from '../components/Auth/LoginContainer'
 import LogOutContainer from '../components/LogOut/LogOutContainer'
-import MapContainer from '../components/Map/Map'
+import MapContainer from '../components/Map/MapContainer'
+
 // router
 import { Route, Switch } from 'react-router'
 import { HashRouter, Link } from 'react-router-dom'
@@ -33,29 +34,10 @@ function testAPI () {
   })
 }
 
-// function logOut () {
-//   FB.logout(response => {
-//     console.log('log out')// user is now logged out
-//   })
-// }
-
 class App extends Component {
-  constructor (props) {
-    super(props)
-
-    this.checkLoginState = this.checkLoginState.bind(this)
-    this.logIn = this.logIn.bind(this)
-  }
-  checkLoginState () {
-    FB.getLoginStatus(function (response) {
-      // this.statusChangeCallback(response)
-    })
-  }
-  logIn () {
-    FB.login(this.checkLoginState())
-  }
-  componentWillMount () {
+  componentDidMount () {
     window.fbAsyncInit = function () {
+      // debugger;
       FB.init({
         appId: '1962796347374005',
         cookie: true,
@@ -69,8 +51,8 @@ class App extends Component {
         if (response.status === 'connected') {
           testAPI()
         }
-        // statusChangeCallback(response)
       })
+
     };
 
     (function (d, s, id) {
@@ -83,6 +65,7 @@ class App extends Component {
   }
 
   render () {
+    console.log(this.props)
     return (
       <HashRouter>
         <div className='App'>
@@ -90,7 +73,6 @@ class App extends Component {
             <img src={logo} className='App-logo'
               alt='logo' />
             <LoginContainer />
-
             <LogOutContainer />
           </div>
 

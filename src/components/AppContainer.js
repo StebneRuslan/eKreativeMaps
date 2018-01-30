@@ -3,9 +3,9 @@ import { bindActionCreators } from 'redux'
 import { changeStateProp } from '../actions'
 import App from './App'
 
-const mapStateToProps = ({main: {value}}, ownProps) => {
+const mapStateToProps = ({main: {userToken}}, ownProps) => {
   return {
-    value,
+    userToken,
     ...ownProps
   }
 }

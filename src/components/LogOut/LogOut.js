@@ -19,11 +19,14 @@ class logOut extends Component {
   }
 
   render () {
-    return (
-      <div className='ComponentA'>
-        <button onClick={this.logOut}>logOut</button>
-      </div>
-    )
+    console.log(this.props.userToken)
+    if (this.props.userToken !== '') {
+      return (
+        <div className='ComponentA'>
+          <button onClick={this.logOut}>logOut</button>
+        </div>
+      )
+    } else return ''
   }
 }
 

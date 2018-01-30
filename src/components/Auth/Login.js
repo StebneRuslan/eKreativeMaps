@@ -17,15 +17,23 @@ class Login extends Component {
     })
   }
   logIn () {
-    FB.login(this.checkLoginState())
+    FB.login()
+    setTimeout(()=> {
+      this.checkLoginState()
+    },10000)
   }
 
   render () {
-    return (
-      <div className='ComponentA'>
-        <button onClick={this.logIn}>login</button>
-      </div>
-    )
+    console.log(this)
+    if (this.props.userToken !== '') {
+      return ''
+    } else {
+      return (
+        <div className='ComponentA'>
+          <button onClick={this.logIn}>login</button>
+        </div>
+      )
+    }
   }
 }
 

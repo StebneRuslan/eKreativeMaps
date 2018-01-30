@@ -2,6 +2,7 @@ export const INCREMENT = 'INCREMENT'
 export const DECREMENT = 'DECREMENT'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
+export const ADDPLACE = 'ADDPLACE'
 
 export function increment () {
   return dispatch => {
@@ -29,10 +30,18 @@ export function login (userToken) {
 }
 
 export function logOut () {
-  debugger
   return dispatch => {
     dispatch({
       type: LOGOUT
+    })
+  }
+}
+
+export function addPlace (place) {
+  return dispatch => {
+    dispatch({
+      type: ADDPLACE,
+      data: place
     })
   }
 }

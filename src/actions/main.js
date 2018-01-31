@@ -3,6 +3,8 @@ export const DECREMENT = 'DECREMENT'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
 export const ADDPLACE = 'ADDPLACE'
+export const REMOVEPLACE = 'REMOVEPLACE'
+export const EDITPLACE = 'EDITPLACE'
 
 export function increment () {
   return dispatch => {
@@ -42,6 +44,24 @@ export function addPlace (place) {
     dispatch({
       type: ADDPLACE,
       data: place
+    })
+  }
+}
+
+export function removePlace (place, index) {
+  return dispatch => {
+    dispatch({
+      type: REMOVEPLACE,
+      data: {place, index}
+    })
+  }
+}
+
+export function editPlace (type, value, index) {
+  return dispatch => {
+    dispatch({
+      type: EDITPLACE,
+      data: {type, value, index}
     })
   }
 }

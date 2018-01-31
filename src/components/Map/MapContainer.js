@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { changeStateProp } from '../../actions'
-import { addPlace } from '../../actions/main'
+import { addPlace, editPlace, removePlace } from '../../actions/main'
 import Map from './Map'
 
 const mapStateToProps = ({main: {places, userToken}}, ownProps) => {
@@ -14,7 +14,7 @@ const mapStateToProps = ({main: {places, userToken}}, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    ...bindActionCreators({changeStateProp, addPlace}, dispatch)
+    ...bindActionCreators({changeStateProp, addPlace, editPlace, removePlace}, dispatch)
   }
 }
 

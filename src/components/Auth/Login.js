@@ -17,14 +17,10 @@ class Login extends Component {
     })
   }
   logIn () {
-    FB.login()
-    setTimeout(()=> {
-      this.checkLoginState()
-    },10000)
+    FB.login(this.checkLoginState)
   }
 
   render () {
-    console.log(this)
     if (this.props.userToken !== '') {
       return ''
     } else {

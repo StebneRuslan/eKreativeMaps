@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react'
-import ReactDragList from 'react-drag-list'
 
 class MapContainer extends Component {
   constructor (props) {
@@ -8,7 +7,6 @@ class MapContainer extends Component {
     this.mapClicked = this.mapClicked.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onRemove = this.onRemove.bind(this)
-    this.onMarkerClick = this.onMarkerClick.bind(this)
     this.mouseUp = this.mouseUp.bind(this)
     this.unFocus = this.unFocus.bind(this)
     this.focus = this.focus.bind(this)
@@ -16,13 +14,6 @@ class MapContainer extends Component {
   }
 
   mapClicked (mapProps, map, clickEvent) {
-    // const state = this.props.places
-    // state.push({
-    //   title: '',
-    //   description: '',
-    //   latLng: {lat: clickEvent.latLng.lat(), lng: clickEvent.latLng.lng()}
-    // })
-    // this.setState({places: state})
     this.props.addPlace({
       title: '',
       description: '',
@@ -34,19 +25,8 @@ class MapContainer extends Component {
     this.props.editPlace(type, e.target.value, index)
   }
 
-  onMarkerClick (props, marker, e) {
-    // this.setState({
-    //   selectedPlace: props,
-    //   activeMarker: marker,
-    //   showingInfoWindow: true
-    // })
-  }
-
   onRemove (e) {
-    // debugger
     this.props.removePlace(this.props.places, e.target.form.id)
-    // const state = this.props.places
-    // this.setState({places: state})
   }
 
   mouseUp (mapProps, map, clickEvent) {
@@ -55,27 +35,22 @@ class MapContainer extends Component {
   }
 
   focus (mapProps) {
-    document.getElementById(mapProps.id).classList.add('active-form')
+    document.getElementById(mapProps.dragId).classList.add('active-form')
   }
 
   unFocus (mapProps) {
-    document.getElementById(mapProps.id).classList.remove('active-form')
+    document.getElementById(mapProps.dragId).classList.remove('active-form')
   }
 
   dragUpdate (e) {
-    // let placeClone = this.props.places
-    // let tmp = placeClone[e.oldIndex]
-    // placeClone.splice([e.oldIndex], 1)
-    // placeClone.splice([e.newIndex], 0, tmp)
     this.props.dragUpdate(e.oldIndex, e.newIndex, this.props.places)
-    // this.props.dragUpdate(placeClone)
   }
 
   render () {
+    let draggingIndex = null
     if (this.props.userToken === '') {
       return ''
     } else {
-      // console.log(this.state)
       return (
         <div>
           <Map google={this.props.google} zoom={14} onClick={this.mapClicked}
@@ -83,12 +58,12 @@ class MapContainer extends Component {
               lat: 49.4312996658681,
               lng: 32.056238651275635
             }}
-            style={{width: '57%', height: '100%', float: 'left', position: 'static'}}>
+            style={{width: '65%', height: '650px', float: 'left', position: 'static'}}>
             {this.props.places.map((element, index) => {
               return (<Marker
-                // onMouseout={this.unFocus}
+                onMouseout={this.unFocus}
                 onMouseup={this.mouseUp}
-                // onMouseover={this.focus}
+                onMouseover={this.focus}
                 draggable
                 key={index}
                 dragId={index}
@@ -99,38 +74,45 @@ class MapContainer extends Component {
 
           </Map>
           <div className='div-form'>
-            {console.log(1111, this.props.places)}
-            <ReactDragList
-              dataSource={this.props.places}
-              onUpdate={this.dragUpdate}
-              row={(element, index) => {
-                return (
-                  <form className='form' key={index} id={index}>
-                    {console.log(22222, element.title, element)}
-                    <label>
-                      <input type='text'
-                        name='title'
-                        placeholder='Title'
-                        onChange={event => this.onChange(event, 'title', index)}
-                        value={element.title}
+            { this.props.places.map((element, index) => {
+              return (
+                <form
+                  className='form'
+                  key={index}
+                  id={index}
+                  draggable
+                  onDragEnd={(e) => {
+                    this.props.dragUpdate(e.target.id, draggingIndex, this.props.places)
+                  }}
+                  onDragOver={(e) => {
+                    if (e.target.id) {
+                      draggingIndex = e.target.id
+                    }
+                  }}
+                >
+                  <label>
+                    <input type='text'
+                      name='title'
+                      placeholder='Title'
+                      onChange={event => this.onChange(event, 'title', index)}
+                      value={element.title}
                       />
-                    </label>
-                    <label>
-                      <input
-                        type='text'
-                        name='description'
-                        placeholder='Description'
-                        onChange={event => this.onChange(event, 'description', index)}
-                        value={element.description}
+                  </label>
+                  <label>
+                    <input
+                      type='text'
+                      name='description'
+                      placeholder='Description'
+                      onChange={event => this.onChange(event, 'description', index)}
+                      value={element.description}
                       />
-                    </label>
-                    <label>
-                      <input type='button' value='Delete' onClick={this.onRemove} />
-                    </label>
-                  </form>
-                )
-              }}
-            />
+                  </label>
+                  <label>
+                    <input type='button' value='Delete' onClick={this.onRemove} />
+                  </label>
+                </form>
+              )
+            })}
           </div>
         </div>
       )

@@ -1,3 +1,4 @@
+/* eslint-disable one-var */
 /* global FB */
 
 import React, { Component } from 'react'
@@ -8,7 +9,7 @@ import './App.css'
 // components
 // import ComponentAContainer from '../components/ComponentsA/ComponentAContainer'
 // import ComponentBContainer from '../components/ComponentsB/ComponentBContainer'
-import LoginContainer from '../components/Auth/LoginContainer'
+import LoginContainer from './Login/LoginContainer'
 import LogOutContainer from '../components/LogOut/LogOutContainer'
 import MapContainer from '../components/Map/MapContainer'
 
@@ -53,6 +54,7 @@ class App extends Component {
       })
     };
 
+// eslint-disable-next-line one-var
     (function (d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0]
       if (d.getElementById(id)) { return }

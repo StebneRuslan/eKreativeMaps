@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import {Map, Marker, InfoWindow, GoogleApiWrapper} from 'google-maps-react'
+import {Map, Marker, GoogleApiWrapper} from 'google-maps-react'
+import ReactDragList from 'react-drag-list'
 
 class MapContainer extends Component {
   constructor (props) {
@@ -11,12 +12,7 @@ class MapContainer extends Component {
     this.mouseUp = this.mouseUp.bind(this)
     this.unFocus = this.unFocus.bind(this)
     this.focus = this.focus.bind(this)
-
-    this.state = ({
-      showingInfoWindow: false,
-      activeMarker: null,
-      selectedPlace: props
-    })
+    this.dragUpdate = this.dragUpdate.bind(this)
   }
 
   mapClicked (mapProps, map, clickEvent) {
@@ -47,14 +43,15 @@ class MapContainer extends Component {
   }
 
   onRemove (e) {
+    // debugger
     this.props.removePlace(this.props.places, e.target.form.id)
-    const state = this.props.places
-    this.setState({places: state})
+    // const state = this.props.places
+    // this.setState({places: state})
   }
 
   mouseUp (mapProps, map, clickEvent) {
     this.props.editPlace('latLng', {lat: clickEvent.latLng.lat(),
-      lng: clickEvent.latLng.lng()}, mapProps.id)
+      lng: clickEvent.latLng.lng()}, mapProps.dragId)
   }
 
   focus (mapProps) {
@@ -63,6 +60,15 @@ class MapContainer extends Component {
 
   unFocus (mapProps) {
     document.getElementById(mapProps.id).classList.remove('active-form')
+  }
+
+  dragUpdate (e) {
+    // let placeClone = this.props.places
+    // let tmp = placeClone[e.oldIndex]
+    // placeClone.splice([e.oldIndex], 1)
+    // placeClone.splice([e.newIndex], 0, tmp)
+    this.props.dragUpdate(e.oldIndex, e.newIndex, this.props.places)
+    // this.props.dragUpdate(placeClone)
   }
 
   render () {
@@ -80,43 +86,51 @@ class MapContainer extends Component {
             style={{width: '57%', height: '100%', float: 'left', position: 'static'}}>
             {this.props.places.map((element, index) => {
               return (<Marker
-                onMouseout={this.unFocus}
+                // onMouseout={this.unFocus}
                 onMouseup={this.mouseUp}
-                onMouseover={this.focus}
+                // onMouseover={this.focus}
                 draggable
                 key={index}
-                id={index}
+                dragId={index}
                 title={element.title}
                 name={element.title}
                 position={{lat: element.latLng.lat, lng: element.latLng.lng}} />)
             })}
-            <InfoWindow
-              marker={this.state.activeMarker}
-              visible={this.state.showingInfoWindow}>
-              <div>
-                <h1>{this.state.selectedPlace.name}</h1>
-              </div>
-            </InfoWindow>
+
           </Map>
           <div className='div-form'>
-            { this.props.places.map((element, index) => {
-              return (<form className='form' key={index} id={index}>
-                <input type='text'
-                  name='title'
-                  placeholder='Title'
-                  onChange={event => this.onChange(event, 'title', index)}
-                  value={element.title}
-              />
-                <input
-                  type='text'
-                  name='description'
-                  placeholder='Description'
-                  onChange={event => this.onChange(event, 'description', index)}
-                  value={element.description}
-              />
-                <input type='button' value='Delete' onClick={this.onRemove} />
-              </form>)
-            })}
+            {console.log(1111, this.props.places)}
+            <ReactDragList
+              dataSource={this.props.places}
+              onUpdate={this.dragUpdate}
+              row={(element, index) => {
+                return (
+                  <form className='form' key={index} id={index}>
+                    {console.log(22222, element.title, element)}
+                    <label>
+                      <input type='text'
+                        name='title'
+                        placeholder='Title'
+                        onChange={event => this.onChange(event, 'title', index)}
+                        value={element.title}
+                      />
+                    </label>
+                    <label>
+                      <input
+                        type='text'
+                        name='description'
+                        placeholder='Description'
+                        onChange={event => this.onChange(event, 'description', index)}
+                        value={element.description}
+                      />
+                    </label>
+                    <label>
+                      <input type='button' value='Delete' onClick={this.onRemove} />
+                    </label>
+                  </form>
+                )
+              }}
+            />
           </div>
         </div>
       )
@@ -127,13 +141,3 @@ class MapContainer extends Component {
 export default GoogleApiWrapper({
   apiKey: ('AIzaSyD40bP14XrnSBIK2Ac8v6NoB7PvEQN0YxY')
 })(MapContainer)
-
-// MapContainer.propTypes = {
-//   login: PropTypes.func.isRequired
-// }
-//
-// MapContainer.defaultProps = {
-//   logIn: () => {}
-// }
-//
-// export default MapContainer

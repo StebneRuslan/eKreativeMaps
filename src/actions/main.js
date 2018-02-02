@@ -5,6 +5,7 @@ export const LOGOUT = 'LOGOUT'
 export const ADDPLACE = 'ADDPLACE'
 export const REMOVEPLACE = 'REMOVEPLACE'
 export const EDITPLACE = 'EDITPLACE'
+export const DRAGUPDATE = 'DRAGUPDATE'
 
 export function increment () {
   return dispatch => {
@@ -62,6 +63,15 @@ export function editPlace (type, value, index) {
     dispatch({
       type: EDITPLACE,
       data: {type, value, index}
+    })
+  }
+}
+
+export function dragUpdate (oldIndex, newIndex, places) {
+  return dispatch => {
+    dispatch({
+      type: DRAGUPDATE,
+      data: {oldIndex, newIndex, places}
     })
   }
 }

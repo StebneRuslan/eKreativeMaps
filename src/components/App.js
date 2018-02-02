@@ -29,7 +29,7 @@ import { HashRouter } from 'react-router-dom'
 
 function testAPI () {
   FB.api('/me', function (response) {
-    alert('Successful login for: ' + response.name)
+    // alert('Successful login for: ' + response.name)
     return 'Successful login for: ' + response.name
   })
 }
